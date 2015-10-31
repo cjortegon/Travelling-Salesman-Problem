@@ -1,14 +1,18 @@
 package graph;
 
+import java.util.ArrayList;
+
 public class Node {
 
-	private long longitude, latitude;
-	private String name;
+	public double longitude, latitude;
+	public int id;
+	public ArrayList<Node> adjacencies;
 
-	public Node(long longitude, long latitude, String name) {
+	public Node(double longitude, double latitude, int id) {
 		this.longitude = longitude;
 		this.latitude = latitude;
-		this.name = name;
+		this.id = id;
+		this.adjacencies = new ArrayList<>();
 	}
 
 }
