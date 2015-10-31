@@ -1,13 +1,18 @@
 package logic;
 
+import java.util.ArrayList;
+
 import graph.Graph;
 
 public class TravellingAlgorithm {
 
-	public Graph graph;
-
-	public TravellingAlgorithm(Graph graph) {
-		this.graph = graph;
+	private ArrayList<double[]> appointments;
+	
+	public TravellingAlgorithm() {
 	}
 
+	public void addAppointment() {
+		
+	}
+	
 }
