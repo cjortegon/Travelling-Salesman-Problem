@@ -12,7 +12,7 @@ public class TravellingAlgorithm {
 	private int minimumDistance;
 
 	public TravellingAlgorithm() {
-		minimumDistance = 1000;
+		minimumDistance = 800;
 		appointments = new ArrayList<>();
 	}
 
@@ -48,7 +48,6 @@ public class TravellingAlgorithm {
 	}
 
 	/**
-	 * Gasca: Falta garantizar minimo 2 conexiones
 	 */
 	private void createEdgesBetweenNodes() {
 
@@ -65,6 +64,24 @@ public class TravellingAlgorithm {
 					node1.adjacencies.add(node2);
 					node2.adjacencies.add(node1);
 				}
+			}
+		}
+		
+		//Checking if everyone (nodes) has at least two connections
+		for (int i = 0; i < graph.nodes.size(); i++) {
+			if(graph.nodes.get(i).adjacencies.size() < 2){
+				double minDst = 1000000;
+				Node newConnection = null;
+				for (int j = 0; j < graph.nodes.size(); j++) {
+					if(i != j){
+						double dst = Math.sqrt(Math.pow(graph.nodes.get(i).longitude-graph.nodes.get(j).longitude, 2)+Math.pow(graph.nodes.get(i).latitude-graph.nodes.get(j).latitude, 2));
+						if(dst < minDst){
+							newConnection = graph.nodes.get(j);
+							minDst = dst;
+						}
+					}
+				}
+				graph.nodes.get(i).adjacencies.add(newConnection);
 			}
 		}
 	}
