@@ -66,15 +66,15 @@ public class TravellingAlgorithm {
 				}
 			}
 		}
-		
-		//Checking if everyone (nodes) has at least two connections
+
+		// Checking if everyone (nodes) has at least two connections
 		for (int i = 0; i < graph.nodes.size(); i++) {
-			if(graph.nodes.get(i).adjacencies.size() < 2){
-				double minDst = 1000000;
+			while (graph.nodes.get(i).adjacencies.size() < 2) {
+				double minDst = Double.MAX_VALUE;
 				Node newConnection = null;
 				for (int j = 0; j < graph.nodes.size(); j++) {
-					if(i != j){
-						double dst = Math.sqrt(Math.pow(graph.nodes.get(i).longitude-graph.nodes.get(j).longitude, 2)+Math.pow(graph.nodes.get(i).latitude-graph.nodes.get(j).latitude, 2));
+					if(i != j && !graph.nodes.get(i).adjacencies.contains(graph.nodes.get(j))) {
+						double dst = Math.sqrt(Math.pow(graph.nodes.get(i).longitude-graph.nodes.get(j).longitude, 2) + Math.pow(graph.nodes.get(i).latitude-graph.nodes.get(j).latitude, 2));
 						if(dst < minDst){
 							newConnection = graph.nodes.get(j);
 							minDst = dst;
