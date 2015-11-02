@@ -15,4 +15,17 @@ public class Node {
 		this.adjacencies = new ArrayList<>();
 	}
 
+	@Override
+	public String toString() {
+
+		String toString = "";
+		for (int i = 0; i < adjacencies.size(); i++) {
+			toString += adjacencies.get(i).id;
+			if(i != adjacencies.size() - 1)
+				toString += ", ";
+		}
+
+		return "Node "+id+" {"+toString+"}";
+	}
+
 }
