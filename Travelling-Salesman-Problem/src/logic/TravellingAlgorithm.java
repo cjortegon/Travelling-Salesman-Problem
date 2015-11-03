@@ -12,7 +12,7 @@ public class TravellingAlgorithm {
 	private int minimumDistance;
 
 	public TravellingAlgorithm() {
-		minimumDistance = 800;
+		minimumDistance = 700;
 		appointments = new ArrayList<>();
 	}
 
@@ -34,6 +34,10 @@ public class TravellingAlgorithm {
 
 		// Creating edges between close nodes
 		createEdgesBetweenNodes();
+		
+		// Printing graph
+		System.out.println("-- Contectivity graph --");
+		System.out.println(graph);
 
 		// Creating routes
 		ArrayList<Route> routes = new ArrayList<>();
@@ -94,6 +98,12 @@ public class TravellingAlgorithm {
 
 			// Getting new routes
 			ArrayList<Route> newRoutes = route.continueRoute();
+
+			// Printing temporal routes
+			for (int i = 0; i < newRoutes.size(); i++) {
+				System.out.println(newRoutes.get(i));
+			}
+
 			routes.addAll(newRoutes);
 			routes.remove(route);
 
