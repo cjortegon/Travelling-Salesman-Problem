@@ -36,7 +36,8 @@ public class TravellingAlgorithm {
 		createEdgesBetweenNodes();
 		
 		// Printing graph
-		System.out.println("-- Contectivity graph --");
+		int numberOfGroups = graph.countGroups();
+		System.out.println("-- Contectivity graph -- ("+numberOfGroups+(numberOfGroups == 1 ? " group)" : " groups)"));
 		System.out.println(graph);
 
 		// Creating routes
