@@ -23,7 +23,7 @@ public class Graph {
 	}
 
 	public int countGroups() {
-		
+
 		// Floyd warshall
 		int adjacencyMatrix[][] = getAdjacencyMatrix();
 		int next[][] = new int[nodes.size()][nodes.size()];
@@ -39,7 +39,7 @@ public class Graph {
 				}
 			}
 		}
-		
+
 		// Finding groups
 		int groupId = 1;
 		int groups[] = new int[nodes.size()];
@@ -56,9 +56,36 @@ public class Graph {
 		}
 		return groupId-1;
 	}
-	
-	public int[] getProblematicPoints() {
-		return null;
+
+	public ArrayList<PaintedNode> getNodesColoredWithPartitions() {
+
+		ArrayList<PaintedNode> colored = new ArrayList<>();
+		
+		for (int i = 0; i < nodes.size(); i++) {
+			int[] colors = new int[nodes.size()];
+			colors[nodes.get(i).id] = -1;
+			int color = 1;
+			for (int j = 0; j < nodes.get(i).adjacencies.size(); j++) {
+				if(colors[nodes.get(i).adjacencies.get(j).id] == 0) {
+					paintNodesBySideInVector(nodes.get(i).adjacencies.get(j), colors, color);
+					color ++;
+				}
+			}
+			if(color > 2) {
+				colored.add(new PaintedNode(nodes.get(i), colors, color));
+			}
+		}
+		
+		return colored;
+	}
+
+	private void paintNodesBySideInVector(Node node, int colors[], int color) {
+		colors[node.id] = color;
+		for (int i = 0; i < node.adjacencies.size(); i++) {
+			if(colors[node.adjacencies.get(i).id] == 0) {
+				paintNodesBySideInVector(node.adjacencies.get(i), colors, color);
+			}
+		}
 	}
 
 	@Override

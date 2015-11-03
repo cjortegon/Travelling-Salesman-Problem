@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import graph.Graph;
 import graph.Node;
+import graph.PaintedNode;
 
 public class TravellingAlgorithm {
 
@@ -12,7 +13,7 @@ public class TravellingAlgorithm {
 	private int minimumDistance;
 
 	public TravellingAlgorithm() {
-		minimumDistance = 700;
+		minimumDistance = 800;
 		appointments = new ArrayList<>();
 	}
 
@@ -34,10 +35,22 @@ public class TravellingAlgorithm {
 
 		// Creating edges between close nodes
 		createEdgesBetweenNodes();
-		
-		// Printing graph
+
+		// Solving the problem of divided groups
 		int numberOfGroups = graph.countGroups();
-		System.out.println("-- Contectivity graph -- ("+numberOfGroups+(numberOfGroups == 1 ? " group)" : " groups)"));
+//		while(numberOfGroups > 1) {
+//			numberOfGroups = graph.countGroups();
+//		}
+
+		// Solving the bowtie problem
+		ArrayList<PaintedNode> partitionNodes = graph.getNodesColoredWithPartitions();
+//		while(partitionNodes.size() > 0) {
+//			partitionNodes = graph.getNodesColoredWithPartitions();
+//		}
+
+		// Printing graph
+		System.out.println("-- Contectivity graph -- ("+numberOfGroups+(numberOfGroups == 1 ? " group) (" : " groups) (")
+				+partitionNodes.size()+" partition nodes)");
 		System.out.println(graph);
 
 		// Creating routes
