@@ -68,7 +68,7 @@ public class Main {
 
 	public static void main(String[] args) {
 	
-		TravellingAlgorithm route = new TravellingAlgorithm();
+		TravellingAlgorithm route = new TravellingAlgorithm(false, 700);
 		
 		route.addAppointment(1300, 1300);
 		route.addAppointment(700, 1300);

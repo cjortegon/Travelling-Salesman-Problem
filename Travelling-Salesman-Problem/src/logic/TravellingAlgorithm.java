@@ -10,11 +10,13 @@ public class TravellingAlgorithm {
 
 	private ArrayList<double[]> appointments;
 	private Graph graph;
-	private int minimumDistance;
+	private double minimumDistance;
+	private boolean convetDegreesToMeters;
 
-	public TravellingAlgorithm() {
-		minimumDistance = 800;
-		appointments = new ArrayList<>();
+	public TravellingAlgorithm(boolean convetDegreesToMeters, double minimumDistance) {
+		this.minimumDistance = minimumDistance;
+		this.appointments = new ArrayList<>();
+		this.convetDegreesToMeters = convetDegreesToMeters;
 	}
 
 	public void addAppointment(double longitude, double latitude) {
