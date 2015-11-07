@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import logic.Maps;
 import logic.TravellingAlgorithm;
 
 public class Main {
@@ -68,7 +69,7 @@ public class Main {
 
 	public static void main(String[] args) {
 	
-		TravellingAlgorithm route = new TravellingAlgorithm(false, 700);
+		TravellingAlgorithm route = new TravellingAlgorithm(false, 800);
 		
 		route.addAppointment(1300, 1300);
 		route.addAppointment(700, 1300);
@@ -81,7 +82,7 @@ public class Main {
 		route.addAppointment(2200, 1600);
 		route.addAppointment(1600, 1700);
 		
-		route.generateRoute();
+		route.generateRoute(Maps.getAllDistancesForGraph(route.startGraph()));
 		
 
 	}
