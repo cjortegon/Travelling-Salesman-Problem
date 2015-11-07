@@ -97,4 +97,9 @@ public class Graph {
 		return toString;
 	}
 
+	public ArrayList<Node>[] getGroups() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

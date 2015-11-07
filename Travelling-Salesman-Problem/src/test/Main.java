@@ -71,18 +71,22 @@ public class Main {
 	
 		TravellingAlgorithm route = new TravellingAlgorithm(false, 800);
 		
-		route.addAppointment(1300, 1300);
-		route.addAppointment(700, 1300);
-		route.addAppointment(1000, 800);
-		route.addAppointment(800, 300);
-		route.addAppointment(1200, 100);
-		route.addAppointment(1400, 800);
-		route.addAppointment(1900, 600);
-		route.addAppointment(1900, 1200);
-		route.addAppointment(2200, 1600);
-		route.addAppointment(1600, 1700);
+		route.addAppointment(3.342090,-76.530847);
+		route.addAppointment(3.369367,-76.527843);
+		route.addAppointment(3.486261,-76.516709);
+		Maps mapa=new Maps();
 		
-		route.generateRoute(Maps.getAllDistancesForGraph(route.startGraph()));
+
+		System.out.println("escriba la llave");
+		BufferedReader brsysi = new BufferedReader(new InputStreamReader(System.in));
+        String key="";
+		try {
+			key = brsysi.readLine();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		route.generateRoute(mapa.getAllDistancesForGraph(route.startGraph(),key));
 		
 
 	}
