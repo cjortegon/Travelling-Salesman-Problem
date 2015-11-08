@@ -87,7 +87,7 @@ public class TravellingAlgorithm {
 			for (int j = i + 1; j < graph.nodes.size(); j++) {
 				Node node1 = graph.nodes.get(i);
 				Node node2 = graph.nodes.get(j);
-				distances[i][j] = Math.sqrt(Math.pow(node1.longitude-node2.longitude, 2)+Math.pow(node1.latitude-node2.latitude, 2));
+				distances[i][j] = Maps.distanceBetweenPlaces(node1.longitude, node1.latitude, node1.longitude, node2.latitude);
 				distances[j][i] = distances[i][j];
 			}
 		}
@@ -125,7 +125,9 @@ public class TravellingAlgorithm {
 				Node newConnection = null;
 				for (int j = 0; j < graph.nodes.size(); j++) {
 					if(i != j && !graph.nodes.get(i).adjacencies.contains(graph.nodes.get(j))) {
-						double dst = Math.sqrt(Math.pow(graph.nodes.get(i).longitude-graph.nodes.get(j).longitude, 2) + Math.pow(graph.nodes.get(i).latitude-graph.nodes.get(j).latitude, 2));
+						Node node1 = graph.nodes.get(i);
+						Node node2 = graph.nodes.get(j);
+						double dst = Maps.distanceBetweenPlaces(node1.longitude, node1.latitude, node1.longitude, node2.latitude);
 						if(dst < minDst){
 							newConnection = graph.nodes.get(j);
 							minDst = dst;
@@ -159,7 +161,5 @@ public class TravellingAlgorithm {
 		}
 
 	}
-
-
 
 }

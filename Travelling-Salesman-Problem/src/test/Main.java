@@ -74,8 +74,7 @@ public class Main {
 		route.addAppointment(3.342090,-76.530847);
 		route.addAppointment(3.369367,-76.527843);
 		route.addAppointment(3.486261,-76.516709);
-		Maps mapa=new Maps();
-		
+		Maps map = new Maps();
 
 		System.out.println("escriba la llave");
 		BufferedReader brsysi = new BufferedReader(new InputStreamReader(System.in));
@@ -86,7 +85,7 @@ public class Main {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		route.generateRoute(mapa.getAllDistancesForGraph(route.startGraph(),key));
+		route.generateRoute(map.getAllDistancesForGraph(route.startGraph(),key));
 		
 
 	}
