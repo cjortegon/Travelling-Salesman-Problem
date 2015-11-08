@@ -22,8 +22,8 @@ public class Graph {
 		return adjacencyMatrix;
 	}
 
-	public int countGroups() {
-
+	public ArrayList<Node>[] getGroups() {
+		
 		// Floyd warshall
 		int adjacencyMatrix[][] = getAdjacencyMatrix();
 		int next[][] = new int[nodes.size()][nodes.size()];
@@ -54,7 +54,15 @@ public class Graph {
 				groupId ++;
 			}
 		}
-		return groupId-1;
+		
+		ArrayList<Node>[] groupsOfNodes = new ArrayList[groupId-1];
+		for (int i = 0; i < groupsOfNodes.length; i++)
+			groupsOfNodes[i] = new ArrayList<>();
+		for (int i = 0; i < groups.length; i++) {
+			groupsOfNodes[groups[i]-1].add(nodes.get(i));
+		}
+		
+		return groupsOfNodes;
 	}
 
 	public ArrayList<PaintedNode> getNodesColoredWithPartitions() {
