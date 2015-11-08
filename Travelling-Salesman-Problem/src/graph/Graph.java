@@ -23,7 +23,7 @@ public class Graph {
 	}
 
 	public ArrayList<Node>[] getGroups() {
-		
+
 		// Floyd warshall
 		int adjacencyMatrix[][] = getAdjacencyMatrix();
 		int next[][] = new int[nodes.size()][nodes.size()];
@@ -54,21 +54,21 @@ public class Graph {
 				groupId ++;
 			}
 		}
-		
+
 		ArrayList<Node>[] groupsOfNodes = new ArrayList[groupId-1];
 		for (int i = 0; i < groupsOfNodes.length; i++)
 			groupsOfNodes[i] = new ArrayList<>();
 		for (int i = 0; i < groups.length; i++) {
 			groupsOfNodes[groups[i]-1].add(nodes.get(i));
 		}
-		
+
 		return groupsOfNodes;
 	}
 
 	public ArrayList<PaintedNode> getNodesColoredWithPartitions() {
 
 		ArrayList<PaintedNode> colored = new ArrayList<>();
-		
+
 		for (int i = 0; i < nodes.size(); i++) {
 			int[] colors = new int[nodes.size()];
 			colors[nodes.get(i).id] = -1;
@@ -83,7 +83,7 @@ public class Graph {
 				colored.add(new PaintedNode(nodes.get(i), colors, color));
 			}
 		}
-		
+
 		return colored;
 	}
 
@@ -103,11 +103,6 @@ public class Graph {
 			toString += nodes.get(i) + "\n";
 		}
 		return toString;
-	}
-
-	public ArrayList<Node>[] getGroups() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
