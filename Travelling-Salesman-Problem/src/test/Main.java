@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import google.GoogleMatrixRequest;
 import logic.Maps;
 import logic.TravellingAlgorithm;
 
@@ -71,22 +72,42 @@ public class Main {
 
 		TravellingAlgorithm route = new TravellingAlgorithm(false, 900);
 
-		route.addAppointment(3.342090,-76.530847);
-		route.addAppointment(3.369367,-76.527843);
-		route.addAppointment(3.486261,-76.516709);
+		route.addAppointment(3.342090,-76.530847); // U. Icesi
+		route.addAppointment(3.369367,-76.527843); // CC Jardin Plaza
+		route.addAppointment(3.385552, -76.538367); // Alkosto
+		route.addAppointment(3.369573, -76.523412); // La 14 Valle del Lili
+		route.addAppointment(3.372966, -76.540071); // Unicentro
+		route.addAppointment(3.394126, -76.544926); // Premier
+		route.addAppointment(3.353669, -76.523277); // Autonoma
+		route.addAppointment(3.385552, -76.538367); // Ruta 66
+		
+//		route.addAppointment(3.486261,-76.516709); // Exito La Flora
+//		route.addAppointment(3.464946, -76.500997); // CC Unico Outlet
+//		route.addAppointment(3.414001, -76.548025); // CC Cosmocentro
+//		route.addAppointment(3.430365, -76.540557); // Estadio Pascual Guerrero
+		
+		String places[] = {"Icesi","JP","Alkosto","La14","Unicentro","Premier","Autonoma","Ruta66"};
+		
 		Maps map = new Maps();
 
-		System.out.println("escriba la llave");
+		System.out.println("Write your Google Maps key:");
 		BufferedReader brsysi = new BufferedReader(new InputStreamReader(System.in));
 		String key="";
 		try {
 			key = brsysi.readLine();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
-		route.generateRoute(map.getAllDistancesForGraph(route.startGraph(),key));
 
+		//		GoogMatrixRequest google = new GoogMatrixRequest();
+		//		try {
+		//			System.out.println("Time: "+google.getTravelTime(new double[]{3.342090,-76.530847}, new double[]{3.369367,-76.527843}, key));
+		//		} catch (IOException e) {
+		//			System.out.println("Error from google");
+		//			e.printStackTrace();
+		//		}
+
+		route.generateRoute(map.getAllDistancesForGraph(route.startGraph(), key));
+		route.printRoute(places);
 
 	}
 
