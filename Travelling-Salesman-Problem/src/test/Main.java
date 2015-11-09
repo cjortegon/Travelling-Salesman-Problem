@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import google.GoogleMatrixRequest;
+import graph.Graph;
 import logic.Maps;
 import logic.TravellingAlgorithm;
 
@@ -70,25 +71,23 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		TravellingAlgorithm route = new TravellingAlgorithm(false, 900);
+		TravellingAlgorithm route = new TravellingAlgorithm(false, 20);
 
-		route.addAppointment(3.342090,-76.530847); // U. Icesi
-		route.addAppointment(3.369367,-76.527843); // CC Jardin Plaza
+		route.addAppointment(3.342090, -76.530847); // U. Icesi
+		route.addAppointment(3.369367, -76.527843); // CC Jardin Plaza
 		route.addAppointment(3.385552, -76.538367); // Alkosto
 		route.addAppointment(3.369573, -76.523412); // La 14 Valle del Lili
 		route.addAppointment(3.372966, -76.540071); // Unicentro
 		route.addAppointment(3.394126, -76.544926); // Premier
 		route.addAppointment(3.353669, -76.523277); // Autonoma
-		route.addAppointment(3.385552, -76.538367); // Ruta 66
-		
-//		route.addAppointment(3.486261,-76.516709); // Exito La Flora
+		route.addAppointment(3.398072, -76.539722); // Ruta 66
+
+//		route.addAppointment(3.486261, -76.516709); // Exito La Flora
 //		route.addAppointment(3.464946, -76.500997); // CC Unico Outlet
 //		route.addAppointment(3.414001, -76.548025); // CC Cosmocentro
 //		route.addAppointment(3.430365, -76.540557); // Estadio Pascual Guerrero
-		
+
 		String places[] = {"Icesi","JP","Alkosto","La14","Unicentro","Premier","Autonoma","Ruta66"};
-		
-		Maps map = new Maps();
 
 		System.out.println("Write your Google Maps key:");
 		BufferedReader brsysi = new BufferedReader(new InputStreamReader(System.in));
@@ -106,7 +105,10 @@ public class Main {
 		//			e.printStackTrace();
 		//		}
 
-		route.generateRoute(map.getAllDistancesForGraph(route.startGraph(), key));
+		Maps map = new Maps(key);
+		Graph graph = route.initAndGetGraph();
+		double distances[][] = map.getAllDistancesForGraph(graph);
+		route.generateRoute(distances);
 		route.printRoute(places);
 
 	}

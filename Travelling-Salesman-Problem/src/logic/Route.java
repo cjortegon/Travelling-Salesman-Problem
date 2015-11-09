@@ -8,6 +8,7 @@ public class Route {
 
 	private boolean contains[];
 	private ArrayList<Node> nodes;
+	private double weight;
 
 	public Route(int numberOfNodes, Node first) {
 		this.contains = new boolean[numberOfNodes];
@@ -16,6 +17,8 @@ public class Route {
 		setContains();
 	}
 
+	public double getWeight() {return weight;}
+
 	public Route(int numberOfNodes, ArrayList<Node> nodes, Node next) {
 		this.contains = new boolean[numberOfNodes];
 		this.nodes = new ArrayList<>();
@@ -23,7 +26,7 @@ public class Route {
 		this.nodes.add(next);
 		setContains();
 	}
-	
+
 	private void setContains() {
 		for (int i = 0; i < nodes.size(); i++) {
 			this.contains[nodes.get(i).id] = true;
@@ -40,7 +43,7 @@ public class Route {
 	}
 
 	public ArrayList<Route> continueRoute() {
-		
+
 		ArrayList<Route> routes = new ArrayList<>();
 
 		Node lastNode = nodes.get(nodes.size()-1);
@@ -50,21 +53,20 @@ public class Route {
 				routes.add(route);
 			}
 		}
-		
-		return routes;
 
+		return routes;
 	}
 
 	@Override
 	public String toString() {
-		
+
 		String route = "";
 		for (int i = 0; i < nodes.size(); i++) {
 			route += nodes.get(i).id;
 			if(i != nodes.size() - 1)
 				route += ", ";
 		}
-		
+
 		return "Route {"+route+"}";
 	}
 
@@ -75,8 +77,19 @@ public class Route {
 			if(i != nodes.size() - 1)
 				route += ", ";
 		}
-		
-		return "Route {"+route+"}";
+
+		return "Route {"+route+"} w = "+weight;
 	}
-	
+
+	public void calculateWeight(double distances[][], double replaceInfiniteBy) {
+		if(weight == 0) {
+			for (int i = 1; i < distances.length; i++) {
+				if(distances[nodes.get(i-1).id][nodes.get(i).id] == Double.MAX_VALUE)
+					weight += replaceInfiniteBy;
+				else
+					weight += distances[nodes.get(i-1).id][nodes.get(i).id];
+			}
+		}
+	}
+
 }

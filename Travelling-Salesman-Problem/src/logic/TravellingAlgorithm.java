@@ -1,6 +1,8 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import graph.Graph;
 import graph.Node;
@@ -11,11 +13,9 @@ public class TravellingAlgorithm {
 	private ArrayList<double[]> appointments;
 	private Graph graph;
 	private ArrayList<Route> routes;
-	private double minimumDistance;
 	private boolean convetDegreesToMeters, modifiedGraph;
 
 	public TravellingAlgorithm(boolean convetDegreesToMeters, double minimumDistance) {
-		this.minimumDistance = minimumDistance;
 		this.appointments = new ArrayList<>();
 		this.convetDegreesToMeters = convetDegreesToMeters;
 	}
@@ -29,7 +29,7 @@ public class TravellingAlgorithm {
 		generateRoute(null);
 	}
 
-	public Graph startGraph() {
+	public Graph initAndGetGraph() {
 		if(modifiedGraph) {
 			graph = new Graph();
 			for (int i = 0; i < appointments.size(); i++) {
@@ -43,14 +43,18 @@ public class TravellingAlgorithm {
 	public void generateRoute(double distances[][]) {
 
 		// Creating nodes
-		startGraph();
+		initAndGetGraph();
 
 		// Creating distances matrix based on geografical position if the parameter is null
 		if(distances == null)
 			distances = getGeograficalDistances();
 
+		// Get average distance
+		double averageDistance = getDistanceAverageExcludingDiagonalAndInfines(distances);
+		System.out.println("Average distance: "+averageDistance);
+
 		// Creating edges between close nodes
-		createEdgesBetweenNodes(distances);
+		createEdgesBetweenNodes(distances, averageDistance*2);
 
 		// Solving the problem of divided groups
 		ArrayList<Node>[] groups = graph.getGroups();
@@ -73,6 +77,9 @@ public class TravellingAlgorithm {
 		routes = new ArrayList<>();
 		generateTreeOfRoutes(routes, new Route(appointments.size(), graph.nodes.get(0)));
 
+		// Filter best routes by known distances
+		filterRoutes(graph.nodes.size()*2, distances, averageDistance*3);
+
 		// Printing route
 		printRoute(null);
 	}
@@ -92,7 +99,7 @@ public class TravellingAlgorithm {
 
 	/**
 	 */
-	private void createEdgesBetweenNodes(double distances[][]) {
+	private void createEdgesBetweenNodes(double distances[][], double minimumDistance) {
 
 		for (int i = 0; i < graph.nodes.size(); i++) {
 			for (int j = i + 1; j < graph.nodes.size(); j++) {
@@ -102,15 +109,6 @@ public class TravellingAlgorithm {
 					graph.nodes.get(i).adjacencies.add(graph.nodes.get(j));
 					graph.nodes.get(j).adjacencies.add(graph.nodes.get(i));
 				}
-
-				// Geografical based distance
-				//				Node node1 = graph.nodes.get(i);
-				//				Node node2 = graph.nodes.get(j);
-				//				double distance = Math.sqrt(Math.pow(node1.longitude-node2.longitude, 2)+Math.pow(node1.latitude-node2.latitude, 2));
-				//				if(distance < minimumDistance) {
-				//					node1.adjacencies.add(node2);
-				//					node2.adjacencies.add(node1);
-				//				}
 			}
 		}
 
@@ -159,6 +157,40 @@ public class TravellingAlgorithm {
 			for (int i = 0; i < newRoutes.size(); i++)
 				generateTreeOfRoutes(routes, newRoutes.get(i));
 		}
+	}
+
+	private void filterRoutes(int maxNumberOfRoutes, double distances[][], double replaceInfiniteBy) {
+		for (int i = 0; i < routes.size(); i++) {
+			routes.get(i).calculateWeight(distances, replaceInfiniteBy);
+		}
+		while(routes.size() > maxNumberOfRoutes) {
+			int worse = -1;
+			double maxWeight = 0;
+			for (int i = 0; i < routes.size(); i++) {
+				double w = routes.get(i).getWeight();
+				if(w > maxWeight) {
+					maxWeight = w;
+					worse = i;
+				}
+			}
+//			System.out.println("Removing route with weight "+maxWeight+"...");
+			routes.remove(worse);
+		}
+	}
+
+	private double getDistanceAverageExcludingDiagonalAndInfines(double distances[][]) {
+
+		double cumulative = 0;
+		double counter = 0;
+		for (int i = 0; i < distances.length; i++) {
+			for (int j = i + 1; j < distances.length; j++) {
+				if(i != j && distances[i][j] != Double.MAX_VALUE) {
+					cumulative += distances[i][j];
+					counter ++;
+				}
+			}
+		}
+		return cumulative/counter;
 	}
 
 	public void printRoute(String[] places) {

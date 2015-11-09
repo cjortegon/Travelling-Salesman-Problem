@@ -20,7 +20,7 @@ public class GoogleMatrixRequest {
 		return response.body().string();
 	}
 
-	public int getTravelTime(double[] origin, double[] destination, String key) throws IOException {
+	public int getTravelTime(double[] origin, double[] destination, long timeToStart, String key) throws IOException {
 		GoogleMatrixRequest request = new GoogleMatrixRequest();
 		String url_request = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origin[0]+","+origin[1]+"&destinations="+destination[0]+","+destination[1]+"&mode=driving&language=en-EN&key="+key;
 
