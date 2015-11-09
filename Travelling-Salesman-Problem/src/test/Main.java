@@ -102,7 +102,6 @@ public class Main {
 		double distances[][] = map.getAllDistancesForGraph(graph);
 		route.generateRoute(distances);
 		route.printRoute(places);
-
 	}
 
 }
