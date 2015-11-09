@@ -1,6 +1,8 @@
 package logic;
 
-import google.GoogMatrixRequest;
+import java.io.IOException;
+
+import google.GoogleMatrixRequest;
 import graph.Graph;
 import graph.Node;
 
@@ -11,7 +13,7 @@ public class Maps {
 	 */
 	final static double EARTH_RADIUS = 6378160; // Radio de la tierra en metros
 
-//	public static GoogMatrixRequest google = new GoogMatrixRequest();
+	public static GoogleMatrixRequest google = new GoogleMatrixRequest();
 	private String keyo;
 
 	public static double distanceBetweenPlaces(double latitude1, double longitude1, double latitude2, double longitude2) {
@@ -24,17 +26,17 @@ public class Maps {
 	}
 
 	public static double getPeakHourTravelTime(double latitude1, double longitude1, double latitude2, double longitude2, String key) {
-		return distanceBetweenPlaces(latitude1, longitude1, latitude2, longitude2);
-		//		double[] from = {longitude1, latitude1};
-		//		double[] to = {longitude2, latitude2};
-		//		
-		//		try {
-		//			return goog.getTravelTime(from, to, key);
-		//		} catch (IOException e) {
-		//			// TODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
-		//		return -47;
+		//		return distanceBetweenPlaces(latitude1, longitude1, latitude2, longitude2);
+		double[] from = {latitude1, longitude1};
+		double[] to = {latitude2, longitude2};
+
+		try {
+			double time = google.getTravelTime(from, to, key);
+			return time;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return -47;
 	}
 
 	public double[][] getAllDistancesForGraph(Graph graph, String key) {
@@ -63,7 +65,7 @@ public class Maps {
 					} else {
 						Node node1 = graph.nodes.get(i);
 						Node node2 = graph.nodes.get(j);
-//						double pre = distances[i][j];
+						//						double pre = distances[i][j];
 						distances[i][j] = getPeakHourTravelTime(node1.latitude, node1.longitude, node2.latitude, node2.longitude, keyo);
 					}
 				}
