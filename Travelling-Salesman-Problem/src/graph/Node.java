@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Node {
 
-	public double longitude, latitude;
+	public double latitude, longitude;
 	public int id;
 	public ArrayList<Node> adjacencies;
 
-	public Node(double longitude, double latitude, int id) {
-		this.longitude = longitude;
+	public Node(double latitude, double longitude, int id) {
 		this.latitude = latitude;
+		this.longitude = longitude;
 		this.id = id;
 		this.adjacencies = new ArrayList<>();
 	}

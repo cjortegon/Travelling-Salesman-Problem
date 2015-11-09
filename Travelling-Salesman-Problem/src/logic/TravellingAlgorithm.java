@@ -19,11 +19,8 @@ public class TravellingAlgorithm {
 		this.convetDegreesToMeters = convetDegreesToMeters;
 	}
 
-	public void addAppointment(double longitude, double latitude) {
-
-		// >>>>> Convert longitude and latitude to meters
-
-		appointments.add(new double[]{longitude,latitude});
+	public void addAppointment(double latitude, double longitude) {
+		appointments.add(new double[]{latitude, longitude});
 		modifiedGraph = true;
 	}
 
@@ -87,7 +84,7 @@ public class TravellingAlgorithm {
 			for (int j = i + 1; j < graph.nodes.size(); j++) {
 				Node node1 = graph.nodes.get(i);
 				Node node2 = graph.nodes.get(j);
-				distances[i][j] = Maps.distanceBetweenPlaces(node1.longitude, node1.latitude, node1.longitude, node2.latitude);
+				distances[i][j] = Maps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
 				distances[j][i] = distances[i][j];
 			}
 		}
@@ -127,14 +124,18 @@ public class TravellingAlgorithm {
 					if(i != j && !graph.nodes.get(i).adjacencies.contains(graph.nodes.get(j))) {
 						Node node1 = graph.nodes.get(i);
 						Node node2 = graph.nodes.get(j);
-						double dst = Maps.distanceBetweenPlaces(node1.longitude, node1.latitude, node1.longitude, node2.latitude);
-						if(dst < minDst){
+						double dst = Maps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
+						if(dst < minDst) {
 							newConnection = graph.nodes.get(j);
 							minDst = dst;
 						}
 					}
 				}
-				graph.nodes.get(i).adjacencies.add(newConnection);
+				if(newConnection == null) {
+					break;
+				} else {
+					graph.nodes.get(i).adjacencies.add(newConnection);
+				}
 			}
 		}
 	}
