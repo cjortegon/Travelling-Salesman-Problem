@@ -10,6 +10,7 @@ public class TravellingAlgorithm {
 
 	private ArrayList<double[]> appointments;
 	private Graph graph;
+	private ArrayList<Route> routes;
 	private double minimumDistance;
 	private boolean convetDegreesToMeters, modifiedGraph;
 
@@ -69,13 +70,11 @@ public class TravellingAlgorithm {
 		System.out.println(graph);
 
 		// Creating routes
-		ArrayList<Route> routes = new ArrayList<>();
+		routes = new ArrayList<>();
 		generateTreeOfRoutes(routes, new Route(appointments.size(), graph.nodes.get(0)));
 
 		// Printing route
-		System.out.println("-- Routes --");
-		for (int i = 0; i < routes.size(); i++)
-			System.out.println(routes.get(i));
+		printRoute(null);
 	}
 
 	private double[][] getGeograficalDistances() {
@@ -160,7 +159,15 @@ public class TravellingAlgorithm {
 			for (int i = 0; i < newRoutes.size(); i++)
 				generateTreeOfRoutes(routes, newRoutes.get(i));
 		}
-
 	}
 
+	public void printRoute(String[] places) {
+		System.out.println("-- Routes --");
+		for (int i = 0; i < routes.size(); i++) {
+			if(places == null)
+				System.out.println(routes.get(i));
+			else
+				System.out.println(routes.get(i).printWithNames(places));
+		}
+	}
 }
