@@ -97,14 +97,6 @@ public class Main {
 		} catch (IOException e1) {
 		}
 
-		//		GoogMatrixRequest google = new GoogMatrixRequest();
-		//		try {
-		//			System.out.println("Time: "+google.getTravelTime(new double[]{3.342090,-76.530847}, new double[]{3.369367,-76.527843}, key));
-		//		} catch (IOException e) {
-		//			System.out.println("Error from google");
-		//			e.printStackTrace();
-		//		}
-
 		Maps map = new Maps(key);
 		Graph graph = route.initAndGetGraph();
 		double distances[][] = map.getAllDistancesForGraph(graph);
