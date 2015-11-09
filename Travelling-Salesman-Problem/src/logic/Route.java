@@ -68,4 +68,15 @@ public class Route {
 		return "Route {"+route+"}";
 	}
 
+	public String printWithNames(String places[]) {
+		String route = "";
+		for (int i = 0; i < nodes.size(); i++) {
+			route += places[nodes.get(i).id];
+			if(i != nodes.size() - 1)
+				route += ", ";
+		}
+		
+		return "Route {"+route+"}";
+	}
+	
 }
