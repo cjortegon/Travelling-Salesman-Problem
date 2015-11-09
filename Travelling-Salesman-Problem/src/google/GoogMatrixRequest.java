@@ -1,7 +1,7 @@
 package google;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -23,8 +23,8 @@ public class GoogMatrixRequest {
     
   public int getTravelTime(double[] origino,double[] destinationo,String keyo) throws IOException {
     GoogMatrixRequest request = new GoogMatrixRequest();
-    LocalDateTime nowo=LocalDateTime.now();
-    nowo.getHour();
+//    LocalDateTime nowo=LocalDateTime.now();
+//    nowo.getHour();
     String url_request = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origino[0]+","+origino[1]+"&destinations="+destinationo[0]+","+destinationo[1]+"&mode=driving&language=en-EN&key="+keyo;
 
     String response = request.run(url_request);
