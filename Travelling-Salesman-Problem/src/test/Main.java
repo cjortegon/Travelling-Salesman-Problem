@@ -71,6 +71,24 @@ public class Main {
 
 	public static void main(String[] args) {
 
+		GoogleMatrixRequest google = new GoogleMatrixRequest();
+		try {
+			long t650am = GoogleMatrixRequest.getTodayTimeAt(6, 50);
+			long t400am = GoogleMatrixRequest.getTodayTimeAt(4, 0);
+			System.out.println("6:50 --> "+t650am);
+			System.out.println("4:00 --> "+t400am);
+			System.out.println(google.getTravelTime(new double[]{3.369367, -76.527843}, new double[]{3.342090, -76.530847}, t650am, "AIzaSyDZARgY0UjfrVdglek8DCdYTozKcnyEu7c"));
+			System.out.println(google.getTravelTime(new double[]{3.369367, -76.527843}, new double[]{3.342090, -76.530847}, t400am, "AIzaSyDZARgY0UjfrVdglek8DCdYTozKcnyEu7c"));
+		} catch (IOException e) {
+			System.out.println("Google error");
+		}
+
+//		testInCaliColombia();
+
+	}
+
+	public static void testInCaliColombia() {
+
 		TravellingAlgorithm route = new TravellingAlgorithm(false, 20);
 
 		route.addAppointment(3.342090, -76.530847); // U. Icesi
@@ -82,10 +100,10 @@ public class Main {
 		route.addAppointment(3.353669, -76.523277); // Autonoma
 		route.addAppointment(3.398072, -76.539722); // Ruta 66
 
-//		route.addAppointment(3.486261, -76.516709); // Exito La Flora
-//		route.addAppointment(3.464946, -76.500997); // CC Unico Outlet
-//		route.addAppointment(3.414001, -76.548025); // CC Cosmocentro
-//		route.addAppointment(3.430365, -76.540557); // Estadio Pascual Guerrero
+		//		route.addAppointment(3.486261, -76.516709); // Exito La Flora
+		//		route.addAppointment(3.464946, -76.500997); // CC Unico Outlet
+		//		route.addAppointment(3.414001, -76.548025); // CC Cosmocentro
+		//		route.addAppointment(3.430365, -76.540557); // Estadio Pascual Guerrero
 
 		String places[] = {"Icesi","JP","Alkosto","La14","Unicentro","Premier","Autonoma","Ruta66"};
 
