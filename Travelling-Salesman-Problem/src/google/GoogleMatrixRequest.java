@@ -25,8 +25,8 @@ public class GoogleMatrixRequest {
 
 		String url_request = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origin[0]+","+origin[1]+"&destinations="+destination[0]+","+destination[1]+"&mode=driving&departure_time="+timeToStart+"&language=en-EN&key="+key;
 		String response = request.run(url_request);
-		System.out.println(response);
-		int durationIndex = response.indexOf("duration");
+		//		System.out.println(response);
+		int durationIndex = response.indexOf("duration_in_traffic");
 		String nuResponse = response.substring(durationIndex);
 		int starto = nuResponse.indexOf("value");
 		starto += 9;
