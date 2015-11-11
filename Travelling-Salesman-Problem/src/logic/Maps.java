@@ -33,7 +33,7 @@ public class Maps {
 		return angle * EARTH_RADIUS;
 	}
 
-	public double getPeakTravelTime(double latitude1, double longitude1, double latitude2, double longitude2, long hour) {
+	public double getTravelTime(double latitude1, double longitude1, double latitude2, double longitude2, long hour) {
 		//		return distanceBetweenPlaces(latitude1, longitude1, latitude2, longitude2);
 		double[] from = {latitude1, longitude1};
 		double[] to = {latitude2, longitude2};
@@ -77,8 +77,8 @@ public class Maps {
 					} else {
 						Node node1 = graph.nodes.get(i);
 						Node node2 = graph.nodes.get(j);
-						distances[i][j] = getPeakTravelTime(node1.latitude, node1.longitude,
-								node2.latitude, node2.longitude, GoogleMatrixRequest.getTodayTimeAt(4, 0));
+						distances[i][j] = getTravelTime(node1.latitude, node1.longitude,
+								node2.latitude, node2.longitude, GoogleMatrixRequest.getTodayTimeInSecondsAt(4, 0) + 86400);
 						consultados ++;
 					}
 				}

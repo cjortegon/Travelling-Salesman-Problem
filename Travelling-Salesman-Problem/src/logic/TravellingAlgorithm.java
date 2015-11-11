@@ -95,7 +95,9 @@ public class TravellingAlgorithm {
 
 	public Route getBestRouteBasedOnSchedule(long[][] schedule) {
 
-		// Consultar
+		long dayStartTime = schedule[0][0];
+		
+		// --> Prove all the routes at the specified schedule of working
 
 		return null;
 	}

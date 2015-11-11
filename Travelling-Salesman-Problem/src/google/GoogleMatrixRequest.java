@@ -20,12 +20,11 @@ public class GoogleMatrixRequest {
 		return response.body().string();
 	}
 
-	public int getTravelTime(double[] origin, double[] destination, long timeToStart, String key) throws IOException {
+	public int getTravelTime(double[] origin, double[] destination, long timeToStartInSeconds, String key) throws IOException {
 		GoogleMatrixRequest request = new GoogleMatrixRequest();
 
-		String url_request = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origin[0]+","+origin[1]+"&destinations="+destination[0]+","+destination[1]+"&mode=driving&departure_time="+timeToStart+"&language=en-EN&key="+key;
+		String url_request = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origin[0]+","+origin[1]+"&destinations="+destination[0]+","+destination[1]+"&mode=driving&departure_time="+timeToStartInSeconds+"&language=en-EN&key="+key;
 		String response = request.run(url_request);
-		//		System.out.println(response);
 		int durationIndex = response.indexOf("duration_in_traffic");
 		String nuResponse = response.substring(durationIndex);
 		int starto = nuResponse.indexOf("value");
@@ -36,11 +35,11 @@ public class GoogleMatrixRequest {
 		return Integer.parseInt(resp);
 	}
 
-	public static long getTodayTimeAt(int hour, int minute){
+	public static long getTodayTimeInSecondsAt(int hour, int minute) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR, hour);
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
 		calendar.set(Calendar.MINUTE, minute);
-		return calendar.getTimeInMillis();
+		return calendar.getTimeInMillis()/1000;
 	}
 
 }

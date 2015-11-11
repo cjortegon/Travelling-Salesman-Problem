@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import google.GoogleMatrixRequest;
 import graph.Graph;
@@ -81,23 +82,27 @@ public class Main {
 		} catch (IOException e1) {
 		}
 
+		//		testGoogleMaps(key);
+		testInCaliColombia(key);
+
+	}
+
+	public static void testGoogleMaps(String key) {
+
 		GoogleMatrixRequest google = new GoogleMatrixRequest();
 		try {
-			long t650am = GoogleMatrixRequest.getTodayTimeAt(6, 50);
-			long t400am = GoogleMatrixRequest.getTodayTimeAt(4, 0);
-			System.out.println("6:50 --> "+t650am);
+			long t640am = GoogleMatrixRequest.getTodayTimeInSecondsAt(6, 50)+86400;
+			long t400am = GoogleMatrixRequest.getTodayTimeInSecondsAt(4, 0)+86400;
+			System.out.println("6:40 --> "+t640am);
 			System.out.println("4:00 --> "+t400am);
-			double jplaza[] = new double[]{3.369367, -76.527843};
+			double jplaza[] = new double[]{3.369213, -76.529486};
 			double icesi[] = new double[]{3.342090, -76.530847};
 
-			System.out.println(google.getTravelTime(jplaza, icesi, t650am, key));
+			System.out.println(google.getTravelTime(jplaza, icesi, t640am, key));
 			System.out.println(google.getTravelTime(jplaza, icesi, t400am, key));
 		} catch (IOException e) {
 			System.out.println("Google error");
 		}
-
-		//		testInCaliColombia();
-
 	}
 
 	public static void testInCaliColombia(String key) {
@@ -105,7 +110,7 @@ public class Main {
 		TravellingAlgorithm algorithm = new TravellingAlgorithm(false);
 
 		algorithm.addAppointment(3.342090, -76.530847, 0); // U. Icesi
-		algorithm.addAppointment(3.369367, -76.527843, 30); // CC Jardin Plaza
+		algorithm.addAppointment(3.369213, -76.529486, 30); // CC Jardin Plaza
 		algorithm.addAppointment(3.385552, -76.538367, 30); // Alkosto
 		algorithm.addAppointment(3.369573, -76.523412, 30); // La 14 Valle del Lili
 		algorithm.addAppointment(3.372966, -76.540071, 30); // Unicentro
@@ -129,7 +134,25 @@ public class Main {
 		algorithm.printRoutes(places);
 
 		// Getting the best route
-		long schedule[][] = {{9,12},{13,19}};
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2015);
+		calendar.set(Calendar.MONTH, 12);
+		calendar.set(Calendar.DAY_OF_MONTH, 3);
+
+		calendar.set(Calendar.HOUR_OF_DAY, 9);
+		long t1s = calendar.getTimeInMillis()/1000;
+		calendar.set(Calendar.HOUR_OF_DAY, 12);
+		long t1e = calendar.getTimeInMillis()/1000;
+		calendar.set(Calendar.HOUR_OF_DAY, 13);
+		long t2s = calendar.getTimeInMillis()/1000;
+		calendar.set(Calendar.HOUR_OF_DAY, 19);
+		long t2e = calendar.getTimeInMillis()/1000;
+
+		long schedule[][] = {{t1s,t1e},{t2s,t2e}};
+		System.out.println("Schedule");
+		System.out.println(schedule[0][0]+" >> "+schedule[0][1]);
+		System.out.println(schedule[1][0]+" >> "+schedule[1][1]);
+
 		Route best = algorithm.getBestRouteBasedOnSchedule(schedule);
 	}
 
