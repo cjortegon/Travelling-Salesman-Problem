@@ -20,6 +20,10 @@ public class Maps {
 		this.key = key;
 	}
 
+	public static double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
+		return Math.sqrt(Math.pow(x2-x1, 2)+Math.pow(y2-y1, 2));
+	}
+
 	public static double distanceBetweenPlaces(double latitude1, double longitude1, double latitude2, double longitude2) {
 		double dlon = Math.toRadians(longitude2 - longitude1);
 		double dlat = Math.toRadians(latitude2 - latitude1);
@@ -29,7 +33,7 @@ public class Maps {
 		return angle * EARTH_RADIUS;
 	}
 
-	public double getPeakTravelTime(double latitude1, double longitude1, double latitude2, double longitude2, int hour) {
+	public double getPeakTravelTime(double latitude1, double longitude1, double latitude2, double longitude2, long hour) {
 		//		return distanceBetweenPlaces(latitude1, longitude1, latitude2, longitude2);
 		double[] from = {latitude1, longitude1};
 		double[] to = {latitude2, longitude2};
@@ -73,7 +77,8 @@ public class Maps {
 					} else {
 						Node node1 = graph.nodes.get(i);
 						Node node2 = graph.nodes.get(j);
-						distances[i][j] = getPeakTravelTime(node1.latitude, node1.longitude, node2.latitude, node2.longitude, 4*60);
+						distances[i][j] = getPeakTravelTime(node1.latitude, node1.longitude,
+								node2.latitude, node2.longitude, GoogleMatrixRequest.getTodayTimeAt(4, 0));
 						consultados ++;
 					}
 				}

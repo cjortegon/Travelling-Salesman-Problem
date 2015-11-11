@@ -1,8 +1,6 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import graph.Graph;
 import graph.Node;
@@ -10,23 +8,33 @@ import graph.PaintedNode;
 
 public class TravellingAlgorithm {
 
+	/**
+	 * Input of spots in a map. Could be placed in meters or 
+	 */
 	private ArrayList<double[]> appointments;
 	private Graph graph;
 	private ArrayList<Route> routes;
 	private boolean convetDegreesToMeters, modifiedGraph;
 
-	public TravellingAlgorithm(boolean convetDegreesToMeters, double minimumDistance) {
+	public TravellingAlgorithm(boolean convetDegreesToMeters) {
 		this.appointments = new ArrayList<>();
 		this.convetDegreesToMeters = convetDegreesToMeters;
 	}
 
-	public void addAppointment(double latitude, double longitude) {
-		appointments.add(new double[]{latitude, longitude});
+	public void addAppointment(double latitude, double longitude, double duration) {
+		appointments.add(new double[]{latitude, longitude, duration});
 		modifiedGraph = true;
 	}
 
 	public void generateRoute() {
 		generateRoute(null);
+	}
+
+	public double getDurationForAppointment(int id) {
+		if(id < 0 || id > appointments.size())
+			return -1;
+		else
+			return appointments.get(id)[2];
 	}
 
 	public Graph initAndGetGraph() {
@@ -81,7 +89,15 @@ public class TravellingAlgorithm {
 		filterRoutes(graph.nodes.size()*2, distances, averageDistance*3);
 
 		// Printing route
-		printRoute(null);
+		printRoutes(null);
+	}
+
+
+	public Route getBestRouteBasedOnSchedule(long[][] schedule) {
+
+		// Consultar
+
+		return null;
 	}
 
 	private double[][] getGeograficalDistances() {
@@ -90,7 +106,10 @@ public class TravellingAlgorithm {
 			for (int j = i + 1; j < graph.nodes.size(); j++) {
 				Node node1 = graph.nodes.get(i);
 				Node node2 = graph.nodes.get(j);
-				distances[i][j] = Maps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
+				if(convetDegreesToMeters)
+					distances[i][j] = Maps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
+				else
+					distances[i][j] = Maps.distanceBetweenPoints(node1.longitude, node1.latitude, node2.longitude, node2.latitude);
 				distances[j][i] = distances[i][j];
 			}
 		}
@@ -121,7 +140,11 @@ public class TravellingAlgorithm {
 					if(i != j && !graph.nodes.get(i).adjacencies.contains(graph.nodes.get(j))) {
 						Node node1 = graph.nodes.get(i);
 						Node node2 = graph.nodes.get(j);
-						double dst = Maps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
+						double dst = 0;
+						if(convetDegreesToMeters)
+							dst = Maps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
+						else
+							dst = Maps.distanceBetweenPoints(node1.longitude, node1.latitude, node2.longitude, node2.latitude);
 						if(dst < minDst) {
 							newConnection = graph.nodes.get(j);
 							minDst = dst;
@@ -146,10 +169,6 @@ public class TravellingAlgorithm {
 			// Getting new routes
 			ArrayList<Route> newRoutes = route.continueRoute();
 
-			// Printing temporal routes
-			//			for (int i = 0; i < newRoutes.size(); i++)
-			//				System.out.println(newRoutes.get(i));
-
 			routes.addAll(newRoutes);
 			routes.remove(route);
 
@@ -173,7 +192,7 @@ public class TravellingAlgorithm {
 					worse = i;
 				}
 			}
-//			System.out.println("Removing route with weight "+maxWeight+"...");
+			//			System.out.println("Removing route with weight "+maxWeight+"...");
 			routes.remove(worse);
 		}
 	}
@@ -193,7 +212,7 @@ public class TravellingAlgorithm {
 		return cumulative/counter;
 	}
 
-	public void printRoute(String[] places) {
+	public void printRoutes(String[] places) {
 		System.out.println("-- Routes --");
 		for (int i = 0; i < routes.size(); i++) {
 			if(places == null)
@@ -202,4 +221,5 @@ public class TravellingAlgorithm {
 				System.out.println(routes.get(i).printWithNames(places));
 		}
 	}
+
 }
