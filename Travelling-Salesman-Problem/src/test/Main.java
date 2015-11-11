@@ -154,6 +154,11 @@ public class Main {
 		System.out.println(schedule[1][0]+" >> "+schedule[1][1]);
 
 		Route best = algorithm.getBestRouteBasedOnSchedule(schedule);
+		if(best != null) {
+			System.out.println(best.printWithNames(places));
+		} else {
+			System.out.println("Not best route has been chosen.");
+		}
 	}
 
 }
