@@ -158,7 +158,7 @@ public class Main {
 		System.out.println(schedule[0][0]+" >> "+schedule[0][1]);
 		System.out.println(schedule[1][0]+" >> "+schedule[1][1]);
 
-		Route best = algorithm.getBestRouteBasedOnSchedule(schedule);
+		Route best = algorithm.getBestRouteBasedOnSchedule(schedule, map);
 		if(best != null) {
 			System.out.println(">> The best route is:");
 			System.out.println(best.printWithObjectId());

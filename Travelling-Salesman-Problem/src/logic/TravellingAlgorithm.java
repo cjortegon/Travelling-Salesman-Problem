@@ -98,11 +98,11 @@ public class TravellingAlgorithm {
 		filterRoutes(graph.nodes.size()*2, distances, averageDistance*3);
 	}
 
-	public Route getBestRouteBasedOnSchedule(long[][] schedule) {
+	public Route getBestRouteBasedOnSchedule(long[][] schedule, Maps map) {
 
 		long dayStartTime = schedule[0][0];
 
-		// --> Prove all the routes at the specified schedule of working
+		// GASCA --> Prove all the routes at the specified schedule of working
 
 		return null;
 	}
