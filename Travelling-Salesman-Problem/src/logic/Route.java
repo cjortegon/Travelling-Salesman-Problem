@@ -7,7 +7,8 @@ import graph.Node;
 public class Route {
 
 	private boolean contains[];
-	private ArrayList<Node> nodes;
+	public ArrayList<Node> nodes;
+	public long schedule;
 	private double weight;
 
 	public Route(int numberOfNodes, Node first) {
@@ -35,7 +36,7 @@ public class Route {
 
 	public boolean isComplete() {
 		for (int i = 0; i < contains.length; i++) {
-			if(contains[i]==false){
+			if(contains[i] == false){
 				return false;
 			}
 		}
@@ -53,21 +54,13 @@ public class Route {
 				routes.add(route);
 			}
 		}
+		
+		// Print new routes
+//		for (int i = 0; i < routes.size(); i++) {
+//			System.out.println(routes.get(i).printWithObjectId());
+//		}
 
 		return routes;
-	}
-
-	@Override
-	public String toString() {
-
-		String route = "";
-		for (int i = 0; i < nodes.size(); i++) {
-			route += nodes.get(i).id;
-			if(i != nodes.size() - 1)
-				route += ", ";
-		}
-
-		return "Route {"+route+"}";
 	}
 
 	public String printWithNames(String places[]) {
@@ -77,7 +70,16 @@ public class Route {
 			if(i != nodes.size() - 1)
 				route += ", ";
 		}
+		return "Route {"+route+"} w = "+weight;
+	}
 
+	public String printWithObjectId() {
+		String route = "";
+		for (int i = 0; i < nodes.size(); i++) {
+			route += nodes.get(i).objectId;
+			if(i != nodes.size() - 1)
+				route += ", ";
+		}
 		return "Route {"+route+"} w = "+weight;
 	}
 
@@ -91,5 +93,28 @@ public class Route {
 			}
 		}
 	}
+	
+	@Override
+	public String toString() {
 
+		String route = "";
+		for (int i = 0; i < nodes.size(); i++) {
+			route += nodes.get(i).id;
+			if(i != nodes.size() - 1)
+				route += ", ";
+		}
+
+		return "Route {"+route+"}";
+	}
+	
+	public void repeated() {
+		for (int i = 0; i < nodes.size(); i++) {
+			for (int j = i+1; j < nodes.size(); j++) {
+				if(nodes.get(i).id == (nodes.get(j).id)) {
+					System.out.println(">>>>>>>>> "+toString());
+				}
+			}
+		}
+	}
+	
 }

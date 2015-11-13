@@ -6,13 +6,20 @@ public class Node {
 
 	public double latitude, longitude;
 	public int id;
+	public Object objectId;
 	public ArrayList<Node> adjacencies;
 
-	public Node(double latitude, double longitude, int id) {
+	public Node(double latitude, double longitude, int id, Object objectId) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.id = id;
+		this.objectId = objectId;
 		this.adjacencies = new ArrayList<>();
+	}
+	
+	public void addNode(Node node) {
+		if(!adjacencies.contains(node))
+			adjacencies.add(node);
 	}
 
 	@Override

@@ -3,6 +3,8 @@ package graph;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import logic.Maps;
+
 public class Graph {
 
 	public ArrayList<Node> nodes;
@@ -15,6 +17,7 @@ public class Graph {
 		int adjacencyMatrix[][] = new int[nodes.size()][nodes.size()];
 		for (int i = 0; i < nodes.size(); i++) {
 			Arrays.fill(adjacencyMatrix[i], Integer.MAX_VALUE);
+			adjacencyMatrix[i][i] = 0;
 			for (int j = 0; j < nodes.get(i).adjacencies.size(); j++) {
 				adjacencyMatrix[i][nodes.get(i).adjacencies.get(j).id] = 1;
 			}
@@ -42,7 +45,7 @@ public class Graph {
 
 		// Finding groups
 		int groupId = 1;
-		int groups[] = new int[nodes.size()];
+		int groups[] = new int[adjacencyMatrix.length];
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
 			if(groups[i] == 0) {
 				groups[i] = groupId;
@@ -55,7 +58,13 @@ public class Graph {
 			}
 		}
 
-		ArrayList<Node>[] groupsOfNodes = new ArrayList[groupId-1];
+//		System.out.print("[");
+//		for (int i = 0; i < groups.length; i++) {
+//			System.out.print(groups[i]+",");
+//		}
+//		System.out.println("]");
+
+		ArrayList<Node>[] groupsOfNodes = new ArrayList[groupId];
 		for (int i = 0; i < groupsOfNodes.length; i++)
 			groupsOfNodes[i] = new ArrayList<>();
 		for (int i = 0; i < groups.length; i++) {
@@ -63,6 +72,84 @@ public class Graph {
 		}
 
 		return groupsOfNodes;
+	}
+
+	public int assignGroups(int groups[]) {
+
+		// Floyd warshall
+		int adjacencyMatrix[][] = getAdjacencyMatrix();
+		for (int k = 0; k < adjacencyMatrix.length; k++) {
+			for (int i = 0; i < adjacencyMatrix.length; i++) {
+				for (int j = 0; j < adjacencyMatrix.length; j++) {
+					if(adjacencyMatrix[i][k] != Integer.MAX_VALUE && adjacencyMatrix[k][j] != Integer.MAX_VALUE) {
+						if (adjacencyMatrix[i][k] + adjacencyMatrix[k][j] < adjacencyMatrix[i][j]) {
+							adjacencyMatrix[i][j] = adjacencyMatrix[i][k] + adjacencyMatrix[k][j];
+						}
+					}
+				}
+			}
+		}
+
+		// Print adjacency matrix
+//		for (int i = 0; i < adjacencyMatrix.length; i++) {
+//			System.out.print(i+" |");
+//			for (int j = 0; j < adjacencyMatrix[i].length; j++) {
+//				if(adjacencyMatrix[i][j] == Integer.MAX_VALUE)
+//					System.out.print(" -");
+//				else
+//					System.out.print(" "+adjacencyMatrix[i][j]);
+//			}
+//			System.out.println();
+//		}
+
+		// Finding groups
+		int groupId = 0;
+		Arrays.fill(groups, 0);
+		for (int i = 0; i < adjacencyMatrix.length; i++) {
+			if(groups[i] == 0) {
+				groupId ++;
+				groups[i] = groupId;
+				for (int j = 0; j < adjacencyMatrix.length; j++) {
+					if(adjacencyMatrix[i][j] != Integer.MAX_VALUE) {
+						groups[j] = groupId;
+					}
+				}
+			}
+		}
+		return groupId;
+	}
+
+	public void makeConnected() {
+
+		// Finding groups
+		int groups[] = new int[nodes.size()];
+		int numberOfGroups = assignGroups(groups);
+		System.out.println("Groups... "+numberOfGroups);
+
+		// Connecting groups
+		while(numberOfGroups > 1) {
+			double smallerDistance = Double.MAX_VALUE;
+			int pair[] = null;
+			for (int i = 0; i < groups.length; i++) {
+				for (int j = i + 1; j < groups.length; j++) {
+					if(i != j && groups[i] != groups[j]) {
+						double d = Maps.distanceBetweenPlaces(nodes.get(i).latitude, nodes.get(i).longitude, nodes.get(j).latitude, nodes.get(j).longitude);
+						if(d < smallerDistance) {
+							smallerDistance = d;
+							pair = new int[]{i,j};
+						}
+					}
+				}
+			}
+
+			// Creating new connection
+			nodes.get(pair[0]).adjacencies.add(nodes.get(pair[1]));
+			nodes.get(pair[1]).adjacencies.add(nodes.get(pair[0]));
+
+			// Getting new groups
+			numberOfGroups = assignGroups(groups);
+			System.out.println("Groups... "+numberOfGroups);
+		}
 	}
 
 	public ArrayList<PaintedNode> getNodesColoredWithPartitions() {

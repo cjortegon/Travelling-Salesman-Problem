@@ -12,22 +12,23 @@ public class TravellingAlgorithm {
 	 * Input of spots in a map. Could be placed in meters or 
 	 */
 	private ArrayList<double[]> appointments;
+	private ArrayList<Object> identifiers;
 	private Graph graph;
 	private ArrayList<Route> routes;
 	private boolean convetDegreesToMeters, modifiedGraph;
 
 	public TravellingAlgorithm(boolean convetDegreesToMeters) {
 		this.appointments = new ArrayList<>();
+		this.identifiers = new ArrayList<>();
 		this.convetDegreesToMeters = convetDegreesToMeters;
 	}
 
-	public void addAppointment(double latitude, double longitude, double duration) {
-		appointments.add(new double[]{latitude, longitude, duration});
-		modifiedGraph = true;
-	}
+	// *************************** PUBLIC METHODS ***************************
 
-	public void generateRoute() {
-		generateRoute(null);
+	public void addAppointment(double latitude, double longitude, double duration, Object objectId) {
+		appointments.add(new double[]{latitude, longitude, duration});
+		identifiers.add(objectId);
+		modifiedGraph = true;
 	}
 
 	public double getDurationForAppointment(int id) {
@@ -41,7 +42,7 @@ public class TravellingAlgorithm {
 		if(modifiedGraph) {
 			graph = new Graph();
 			for (int i = 0; i < appointments.size(); i++) {
-				graph.nodes.add(new Node(appointments.get(i)[0], appointments.get(i)[1], i));
+				graph.nodes.add(new Node(appointments.get(i)[0], appointments.get(i)[1], i, identifiers.get(i)));
 			}
 			modifiedGraph = false;
 		}
@@ -62,23 +63,31 @@ public class TravellingAlgorithm {
 		System.out.println("Average distance: "+averageDistance);
 
 		// Creating edges between close nodes
-		createEdgesBetweenNodes(distances, averageDistance*2);
-
-		// Solving the problem of divided groups
-		ArrayList<Node>[] groups = graph.getGroups();
-		//		while(groups.lenth > 1) {
-		//			numberOfGroups = graph.countGroups();
-		//		}
-
-		// Solving the bowtie problem
-		ArrayList<PaintedNode> partitionNodes = graph.getNodesColoredWithPartitions();
-		//		while(partitionNodes.size() > 0) {
-		//			partitionNodes = graph.getNodesColoredWithPartitions();
-		//		}
+		createEdgesBetweenNodes(distances, averageDistance);
 
 		// Printing graph
-		System.out.println("-- Contectivity graph -- ("+groups.length+(groups.length == 1 ? " group) (" : " groups) (")
-				+partitionNodes.size()+" partition nodes)");
+		System.out.println("-- Contectivity graph --");
+		System.out.println(graph);
+
+		// Solving the problem of divided groups
+//		ArrayList<Node>[] groups = graph.getGroups();
+//		System.out.println("-- Groups --");
+//		for (int i = 0; i < groups.length; i++) {
+//			System.out.print("{");
+//			for (int j = 0; j < groups[i].size(); j++) {
+//				if(j < groups[i].size()-1)
+//					System.out.print(groups[i].get(j).id+",");
+//				else
+//					System.out.println(groups[i].get(j).id+"}");
+//			}
+//		}
+		graph.makeConnected();
+
+		// Solving the bowtie problem
+		solvePartitionProblem();
+
+		// Printing graph
+		System.out.println("-- Contectivity graph --");
 		System.out.println(graph);
 
 		// Creating routes
@@ -87,20 +96,20 @@ public class TravellingAlgorithm {
 
 		// Filter best routes by known distances
 		filterRoutes(graph.nodes.size()*2, distances, averageDistance*3);
-
-		// Printing route
-		printRoutes(null);
 	}
-
 
 	public Route getBestRouteBasedOnSchedule(long[][] schedule) {
 
 		long dayStartTime = schedule[0][0];
-		
+
 		// --> Prove all the routes at the specified schedule of working
 
 		return null;
 	}
+
+	// *************************** PUBLIC METHODS ***************************
+
+	// ************************** INTERNAL METHODS ***************************
 
 	private double[][] getGeograficalDistances() {
 		double distances[][] = new double[graph.nodes.size()][graph.nodes.size()];
@@ -123,12 +132,14 @@ public class TravellingAlgorithm {
 	private void createEdgesBetweenNodes(double distances[][], double minimumDistance) {
 
 		for (int i = 0; i < graph.nodes.size(); i++) {
-			for (int j = i + 1; j < graph.nodes.size(); j++) {
+			if(i == 11)
+				System.out.println("hola");
+			for (int j = 0; j < graph.nodes.size(); j++) {
 
 				// Checking if 2 nodes are close enough
-				if(distances[i][j] < minimumDistance) {
-					graph.nodes.get(i).adjacencies.add(graph.nodes.get(j));
-					graph.nodes.get(j).adjacencies.add(graph.nodes.get(i));
+				if(i != j && distances[i][j] < minimumDistance) {
+					graph.nodes.get(i).addNode(graph.nodes.get(j));
+					graph.nodes.get(j).addNode(graph.nodes.get(i));
 				}
 			}
 		}
@@ -156,13 +167,15 @@ public class TravellingAlgorithm {
 				if(newConnection == null) {
 					break;
 				} else {
-					graph.nodes.get(i).adjacencies.add(newConnection);
+					graph.nodes.get(i).addNode(newConnection);
+					newConnection.addNode(graph.nodes.get(i));
 				}
 			}
 		}
 	}
 
 	private void generateTreeOfRoutes(ArrayList<Route> routes, Route route) {
+		//		System.out.println("Generate");
 
 		if(route.isComplete()) {
 			return;
@@ -171,12 +184,13 @@ public class TravellingAlgorithm {
 			// Getting new routes
 			ArrayList<Route> newRoutes = route.continueRoute();
 
-			routes.addAll(newRoutes);
 			routes.remove(route);
+			routes.addAll(newRoutes);
 
 			// Recursive
-			for (int i = 0; i < newRoutes.size(); i++)
+			for (int i = 0; i < newRoutes.size(); i++) {
 				generateTreeOfRoutes(routes, newRoutes.get(i));
+			}
 		}
 	}
 
@@ -214,6 +228,28 @@ public class TravellingAlgorithm {
 		return cumulative/counter;
 	}
 
+	private Object[] mergeArrays(Object[] group1, Object[] group2) {
+		Object[] merge = new Object[group1.length+group2.length];
+		for (int i = 0; i < group1.length; i++)
+			merge[i] = group1[i];
+		for (int i = 0; i < group2.length; i++)
+			merge[i+group1.length] = group2[i];
+		return merge;
+	}
+
+	private void solvePartitionProblem() {
+		ArrayList<PaintedNode> partitionNodes = graph.getNodesColoredWithPartitions();
+		System.out.println("Partitions: "+partitionNodes.size());
+		//		while(partitionNodes.size() > 0) {
+		//			partitionNodes = graph.getNodesColoredWithPartitions();
+		//			System.out.println("Partitions: "+partitionNodes.size());
+		//		}
+	}
+
+	// ************************** INTERNAL METHODS ***************************
+
+	// ************************** PRINTING METHODS **************************
+
 	public void printRoutes(String[] places) {
 		System.out.println("-- Routes --");
 		for (int i = 0; i < routes.size(); i++) {
@@ -223,5 +259,13 @@ public class TravellingAlgorithm {
 				System.out.println(routes.get(i).printWithNames(places));
 		}
 	}
+
+	public void printRoutes() {
+		System.out.println("-- Routes --");
+		for (int i = 0; i < routes.size(); i++)
+			System.out.println(routes.get(i).printWithObjectId());
+	}
+
+	// ************************** PRINTING METHODS **************************
 
 }

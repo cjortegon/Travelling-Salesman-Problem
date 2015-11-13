@@ -66,9 +66,9 @@ public class Main {
 
 			int latitud=Integer.parseInt(coordenadas[1]);
 
-			route.addAppointment(longitud, latitud, 0);
+			route.addAppointment(longitud, latitud, 0, "Example");
 		}
-		route.generateRoute();
+		route.generateRoute(null);
 	}
 
 	public static void main(String[] args) {
@@ -107,31 +107,36 @@ public class Main {
 
 	public static void testInCaliColombia(String key) {
 
-		TravellingAlgorithm algorithm = new TravellingAlgorithm(false);
+		TravellingAlgorithm algorithm = new TravellingAlgorithm(true);
 
-		algorithm.addAppointment(3.342090, -76.530847, 0); // U. Icesi
-		algorithm.addAppointment(3.369213, -76.529486, 30); // CC Jardin Plaza
-		algorithm.addAppointment(3.385552, -76.538367, 30); // Alkosto
-		algorithm.addAppointment(3.369573, -76.523412, 30); // La 14 Valle del Lili
-		algorithm.addAppointment(3.372966, -76.540071, 30); // Unicentro
-		algorithm.addAppointment(3.394126, -76.544926, 30); // Premier
-		algorithm.addAppointment(3.353669, -76.523277, 30); // Autonoma
-		algorithm.addAppointment(3.398072, -76.539722, 30); // Ruta 66
+		algorithm.addAppointment(3.342090, -76.530847, 0, "Icesi");
+		algorithm.addAppointment(3.369213, -76.529486, 30, "JP");
+		algorithm.addAppointment(3.385552, -76.538367, 30, "Alkosto");
+		algorithm.addAppointment(3.369573, -76.523412, 30, "La14");
+		algorithm.addAppointment(3.372966, -76.540071, 30, "Unicentro");
+		algorithm.addAppointment(3.353669, -76.523277, 30, "Autonoma");
+		algorithm.addAppointment(3.369338, -76.537082, 30, "Crepes");
+		algorithm.addAppointment(3.372298, -76.525489, 30, "Clinica");
+		
+//		algorithm.addAppointment(3.394126, -76.544926, 30, "Premier");
+//		algorithm.addAppointment(3.398072, -76.539722, 30, "Ruta66");
+//		algorithm.addAppointment(3.414001, -76.548025, 30, "Cosmocentro");
+//		algorithm.addAppointment(3.430365, -76.540557, 30, "Pascual");
 
-		//		route.addAppointment(3.486261, -76.516709); // Exito La Flora
-		//		route.addAppointment(3.464946, -76.500997); // CC Unico Outlet
-		//		route.addAppointment(3.414001, -76.548025); // CC Cosmocentro
-		//		route.addAppointment(3.430365, -76.540557); // Estadio Pascual Guerrero
-
-		String places[] = {"Icesi","JP","Alkosto","La14","Unicentro","Premier","Autonoma","Ruta66"};
+		algorithm.addAppointment(3.477838, -76.527730, 30, "Chipichape");
+		algorithm.addAppointment(3.491335, -76.509506, 30, "Sameco");
+		algorithm.addAppointment(3.486261, -76.516709, 30, "Exito");
+		algorithm.addAppointment(3.464946, -76.500997, 30, "Unico");
 
 		Maps map = new Maps(key);
 		Graph graph = algorithm.initAndGetGraph();
 		double distances[][] = map.getAllDistancesForGraph(graph);
 		algorithm.generateRoute(distances);
+		
+//		algorithm.generateRoute(null);
 
 		// Printing options
-		algorithm.printRoutes(places);
+		algorithm.printRoutes();
 
 		// Getting the best route
 		Calendar calendar = Calendar.getInstance();
@@ -149,15 +154,16 @@ public class Main {
 		long t2e = calendar.getTimeInMillis()/1000;
 
 		long schedule[][] = {{t1s,t1e},{t2s,t2e}};
-		System.out.println("Schedule");
+		System.out.println("-- Schedule --");
 		System.out.println(schedule[0][0]+" >> "+schedule[0][1]);
 		System.out.println(schedule[1][0]+" >> "+schedule[1][1]);
 
 		Route best = algorithm.getBestRouteBasedOnSchedule(schedule);
 		if(best != null) {
-			System.out.println(best.printWithNames(places));
+			System.out.println(">> The best route is:");
+			System.out.println(best.printWithObjectId());
 		} else {
-			System.out.println("Not best route has been chosen.");
+			System.out.println("Best route hasn't been chosen.");
 		}
 	}
 
