@@ -70,17 +70,17 @@ public class TravellingAlgorithm {
 		System.out.println(graph);
 
 		// Solving the problem of divided groups
-//		ArrayList<Node>[] groups = graph.getGroups();
-//		System.out.println("-- Groups --");
-//		for (int i = 0; i < groups.length; i++) {
-//			System.out.print("{");
-//			for (int j = 0; j < groups[i].size(); j++) {
-//				if(j < groups[i].size()-1)
-//					System.out.print(groups[i].get(j).id+",");
-//				else
-//					System.out.println(groups[i].get(j).id+"}");
-//			}
-//		}
+		//		ArrayList<Node>[] groups = graph.getGroups();
+		//		System.out.println("-- Groups --");
+		//		for (int i = 0; i < groups.length; i++) {
+		//			System.out.print("{");
+		//			for (int j = 0; j < groups[i].size(); j++) {
+		//				if(j < groups[i].size()-1)
+		//					System.out.print(groups[i].get(j).id+",");
+		//				else
+		//					System.out.println(groups[i].get(j).id+"}");
+		//			}
+		//		}
 		graph.makeConnected();
 
 		// Solving the bowtie problem
@@ -240,10 +240,22 @@ public class TravellingAlgorithm {
 	private void solvePartitionProblem() {
 		ArrayList<PaintedNode> partitionNodes = graph.getNodesColoredWithPartitions();
 		System.out.println("Partitions: "+partitionNodes.size());
-		//		while(partitionNodes.size() > 0) {
-		//			partitionNodes = graph.getNodesColoredWithPartitions();
-		//			System.out.println("Partitions: "+partitionNodes.size());
-		//		}
+		PaintedNode problem = null;
+		for (int i = 0; i < partitionNodes.size(); i++) {
+			if(i == 0)
+				System.out.print("Partitions {"+partitionNodes.get(i).node.id);
+			else if(i == partitionNodes.size()-1)
+				System.out.print(","+partitionNodes.get(i).node.id+"}\n");
+			else
+				System.out.println(","+partitionNodes.get(i).node.id);
+			if(partitionNodes.get(i).node == graph.nodes.get(0)) {
+				problem = partitionNodes.get(i);
+				break;
+			}
+		}
+		while(problem != null) {
+			System.out.println("We got a problem with partitions...");
+		}
 	}
 
 	// ************************** INTERNAL METHODS ***************************
