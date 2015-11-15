@@ -132,8 +132,6 @@ public class TravellingAlgorithm {
 	private void createEdgesBetweenNodes(double distances[][], double minimumDistance) {
 
 		for (int i = 0; i < graph.nodes.size(); i++) {
-			if(i == 11)
-				System.out.println("hola");
 			for (int j = 0; j < graph.nodes.size(); j++) {
 
 				// Checking if 2 nodes are close enough
@@ -228,15 +226,6 @@ public class TravellingAlgorithm {
 		return cumulative/counter;
 	}
 
-	private Object[] mergeArrays(Object[] group1, Object[] group2) {
-		Object[] merge = new Object[group1.length+group2.length];
-		for (int i = 0; i < group1.length; i++)
-			merge[i] = group1[i];
-		for (int i = 0; i < group2.length; i++)
-			merge[i+group1.length] = group2[i];
-		return merge;
-	}
-
 	private void solvePartitionProblem() {
 		ArrayList<PaintedNode> partitionNodes = graph.getNodesColoredWithPartitions();
 		System.out.println("Partitions: "+partitionNodes.size());
@@ -250,11 +239,13 @@ public class TravellingAlgorithm {
 				System.out.println(","+partitionNodes.get(i).node.id);
 			if(partitionNodes.get(i).node == graph.nodes.get(0)) {
 				problem = partitionNodes.get(i);
-				break;
+				//break;
 			}
 		}
-		while(problem != null) {
-			System.out.println("We got a problem with partitions...");
+		if(problem != null) {
+			System.out.println("We got a problem with partitions... ");
+			problem.createEdgeToRemovePartition(graph.nodes, convetDegreesToMeters);
+			System.out.println("Problem solved!");
 		}
 	}
 

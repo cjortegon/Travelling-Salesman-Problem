@@ -109,9 +109,9 @@ public class Main {
 
 		TravellingAlgorithm algorithm = new TravellingAlgorithm(true);
 
+		algorithm.addAppointment(3.385552, -76.538367, 30, "Alkosto");
 		algorithm.addAppointment(3.342090, -76.530847, 0, "Icesi");
 		algorithm.addAppointment(3.369213, -76.529486, 30, "JP");
-		algorithm.addAppointment(3.385552, -76.538367, 30, "Alkosto");
 		algorithm.addAppointment(3.369573, -76.523412, 30, "La14");
 		algorithm.addAppointment(3.372966, -76.540071, 30, "Unicentro");
 		algorithm.addAppointment(3.353669, -76.523277, 30, "Autonoma");
