@@ -118,13 +118,17 @@ public class Route implements Comparable<Route> {
 		}
 	}
 
-	public long findTimeToFinish(long[][] schedule, Maps google, long stopTime) {
+	public long findTimeToFinish(long[][] schedule, GoogleMaps google, ArrayList<Appointment> appointments) {
 		timeInSchedule = 0;
 		int actualSchedule = 0;
 		long actualTime = schedule[actualSchedule][0];
 
+		// NOT IMPLEMENTED YET
+		long stopTime = 1800;
+
 		for (int i = 1; i < nodes.size(); i++) {
-			long travelTime = (long) google.getTravelTime(nodes.get(i-1).latitude, nodes.get(i-1).longitude, nodes.get(i).latitude, nodes.get(i).longitude, actualTime);
+			long travelTime = (long) google.getTravelTime(nodes.get(i-1).latitude, nodes.get(i-1).longitude,
+					nodes.get(i).latitude, nodes.get(i).longitude, actualTime);
 			if(schedule[actualSchedule][1] > actualTime+travelTime+stopTime) {
 				actualTime += travelTime+stopTime;
 				timeInSchedule += travelTime+stopTime;
@@ -139,14 +143,29 @@ public class Route implements Comparable<Route> {
 		}
 		return timeInSchedule;
 	}
-	
+
+	public long findTimeToFinish(long startTime, GoogleMaps google, ArrayList<Appointment> appointments) {
+		timeInSchedule = appointments.get(nodes.get(0).id).duration;
+		for (int i = 1; i < nodes.size(); i++) {
+			timeInSchedule += (long) google.getTravelTime(nodes.get(i-1).latitude, nodes.get(i-1).longitude,
+					nodes.get(i).latitude, nodes.get(i).longitude, startTime + timeInSchedule) + appointments.get(i).duration;
+		}
+		return timeInSchedule;
+	}
+
 	public long getTimeInSchedule() {
 		return timeInSchedule;
 	}
 
 	@Override
 	public int compareTo(Route o) {
-		return (int) (timeInSchedule - o.timeInSchedule);
+		if(timeInSchedule > o.timeInSchedule) {
+			return 1;
+		} else if(timeInSchedule < o.timeInSchedule) {
+			return -1;
+		} else {
+			return 0;
+		}
 	}
 
 }

@@ -3,7 +3,7 @@ package graph;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import logic.Maps;
+import logic.GoogleMaps;
 
 public class Graph {
 
@@ -133,7 +133,7 @@ public class Graph {
 			for (int i = 0; i < groups.length; i++) {
 				for (int j = i + 1; j < groups.length; j++) {
 					if(i != j && groups[i] != groups[j]) {
-						double d = Maps.distanceBetweenPlaces(nodes.get(i).latitude, nodes.get(i).longitude, nodes.get(j).latitude, nodes.get(j).longitude);
+						double d = GoogleMaps.distanceBetweenPlaces(nodes.get(i).latitude, nodes.get(i).longitude, nodes.get(j).latitude, nodes.get(j).longitude);
 						if(d < smallerDistance) {
 							smallerDistance = d;
 							pair = new int[]{i,j};

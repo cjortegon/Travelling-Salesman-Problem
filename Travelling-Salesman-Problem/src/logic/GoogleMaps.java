@@ -6,7 +6,7 @@ import google.GoogleMatrixRequest;
 import graph.Graph;
 import graph.Node;
 
-public class Maps {
+public class GoogleMaps {
 
 	/**
 	 * Constants
@@ -16,7 +16,7 @@ public class Maps {
 	private GoogleMatrixRequest google = new GoogleMatrixRequest();
 	private String key;
 
-	public Maps(String key) {
+	public GoogleMaps(String key) {
 		this.key = key;
 	}
 

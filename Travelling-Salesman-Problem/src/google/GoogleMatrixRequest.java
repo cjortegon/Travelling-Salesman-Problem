@@ -1,7 +1,9 @@
 package google;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -41,6 +43,16 @@ public class GoogleMatrixRequest {
 		System.out.println("Getting from Google Maps... "+time);
 		LocalGoogleMaps.INSTANCE.saveValue(origin, destination, timeToStartInSeconds, time);
 		return time;
+	}
+
+	public static long getTodayTimeInSecondsAt(int hour, int minute, TimeZone timeZone) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeZone(timeZone);
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE, minute);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTimeInMillis()/1000;
 	}
 
 	public static long getTodayTimeInSecondsAt(int hour, int minute) {

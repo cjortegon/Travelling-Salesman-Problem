@@ -2,7 +2,7 @@ package graph;
 
 import java.util.ArrayList;
 
-import logic.Maps;
+import logic.GoogleMaps;
 
 public class PaintedNode {
 
@@ -25,7 +25,7 @@ public class PaintedNode {
 				for (int j = 0; j < nodes.size(); j++) {
 					if(colors[j] != -1) {
 						Node node2 = nodes.get(j);
-						double d = Maps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
+						double d = GoogleMaps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
 						if(i != j && colors[i] != colors[j] && d < minDistance) {
 							minDistance = d;
 							edge = new Node[]{node1, node2};

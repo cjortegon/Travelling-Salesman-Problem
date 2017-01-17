@@ -12,7 +12,8 @@ public class TravellingAlgorithm {
 	/**
 	 * Input of spots in a map. Could be placed in meters or 
 	 */
-	private ArrayList<double[]> appointments;
+//	private ArrayList<double[]> appointments;
+	private ArrayList<Appointment> appointments;
 	private ArrayList<Object> identifiers;
 	private Graph graph;
 	private ArrayList<Route> routes;
@@ -26,24 +27,25 @@ public class TravellingAlgorithm {
 
 	// *************************** PUBLIC METHODS ***************************
 
-	public void addAppointment(double latitude, double longitude, double duration, Object objectId) {
-		appointments.add(new double[]{latitude, longitude, duration});
+	public void addAppointment(double latitude, double longitude, long duration, Object objectId) {
+//		appointments.add(new double[]{latitude, longitude, duration});
+		appointments.add(new Appointment(latitude, longitude, duration));
 		identifiers.add(objectId);
 		modifiedGraph = true;
 	}
 
-	public double getDurationForAppointment(int id) {
-		if(id < 0 || id > appointments.size())
-			return -1;
-		else
-			return appointments.get(id)[2];
-	}
+//	public double getDurationForAppointment(int id) {
+//		if(id < 0 || id > appointments.size())
+//			return -1;
+//		else
+//			return appointments.get(id)[2];
+//	}
 
 	public Graph initAndGetGraph() {
 		if(modifiedGraph) {
 			graph = new Graph();
 			for (int i = 0; i < appointments.size(); i++) {
-				graph.nodes.add(new Node(appointments.get(i)[0], appointments.get(i)[1], i, identifiers.get(i)));
+				graph.nodes.add(new Node(appointments.get(i).latitude, appointments.get(i).longitude, i, identifiers.get(i)));
 			}
 			modifiedGraph = false;
 		}
@@ -71,24 +73,13 @@ public class TravellingAlgorithm {
 		System.out.println(graph);
 
 		// Solving the problem of divided groups
-		//		ArrayList<Node>[] groups = graph.getGroups();
-		//		System.out.println("-- Groups --");
-		//		for (int i = 0; i < groups.length; i++) {
-		//			System.out.print("{");
-		//			for (int j = 0; j < groups[i].size(); j++) {
-		//				if(j < groups[i].size()-1)
-		//					System.out.print(groups[i].get(j).id+",");
-		//				else
-		//					System.out.println(groups[i].get(j).id+"}");
-		//			}
-		//		}
 		graph.makeConnected();
 
 		// Solving the bowtie problem
 		solvePartitionProblem();
 
 		// Printing graph
-		System.out.println("-- Contectivity graph --");
+		System.out.println("-- Contectivity graph (connected) --");
 		System.out.println(graph);
 
 		// Creating routes
@@ -98,11 +89,23 @@ public class TravellingAlgorithm {
 		// Filter best routes by known distances
 		filterRoutes(graph.nodes.size()*2, distances, averageDistance*3);
 	}
-
-	public Route getBestRouteBasedOnSchedule(long[][] schedule, Maps map, long stopTimeInSeconds) {
+	
+	public Route getBestRouteBasedStartingAt(long startTime, GoogleMaps map) {
 
 		for (Route route : routes) {
-			route.findTimeToFinish(schedule, map, stopTimeInSeconds);
+			route.findTimeToFinish(startTime, map, appointments);
+		}
+
+		// Sorting to obtain the smallest
+		Collections.sort(routes);
+
+		return routes.get(0);
+	}
+
+	public Route getBestRouteBasedOnSchedule(long[][] schedule, GoogleMaps map) {
+
+		for (Route route : routes) {
+			route.findTimeToFinish(schedule, map, appointments);
 		}
 
 		// Sorting to obtain the smallest
@@ -122,9 +125,9 @@ public class TravellingAlgorithm {
 				Node node1 = graph.nodes.get(i);
 				Node node2 = graph.nodes.get(j);
 				if(convetDegreesToMeters)
-					distances[i][j] = Maps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
+					distances[i][j] = GoogleMaps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
 				else
-					distances[i][j] = Maps.distanceBetweenPoints(node1.longitude, node1.latitude, node2.longitude, node2.latitude);
+					distances[i][j] = GoogleMaps.distanceBetweenPoints(node1.longitude, node1.latitude, node2.longitude, node2.latitude);
 				distances[j][i] = distances[i][j];
 			}
 		}
@@ -157,9 +160,9 @@ public class TravellingAlgorithm {
 						Node node2 = graph.nodes.get(j);
 						double dst = 0;
 						if(convetDegreesToMeters)
-							dst = Maps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
+							dst = GoogleMaps.distanceBetweenPlaces(node1.latitude, node1.longitude, node2.latitude, node2.longitude);
 						else
-							dst = Maps.distanceBetweenPoints(node1.longitude, node1.latitude, node2.longitude, node2.latitude);
+							dst = GoogleMaps.distanceBetweenPoints(node1.longitude, node1.latitude, node2.longitude, node2.latitude);
 						if(dst < minDst) {
 							newConnection = graph.nodes.get(j);
 							minDst = dst;
