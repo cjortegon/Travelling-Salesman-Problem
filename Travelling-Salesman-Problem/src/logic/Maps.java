@@ -11,7 +11,7 @@ public class Maps {
 	/**
 	 * Constants
 	 */
-	final static double EARTH_RADIUS = 6378160; // Radio de la tierra en metros
+	final static double EARTH_RADIUS = 6378160; // Radius of the earth in meters
 
 	private GoogleMatrixRequest google = new GoogleMatrixRequest();
 	private String key;

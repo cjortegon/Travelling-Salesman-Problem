@@ -1,12 +1,10 @@
 package test;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import google.GoogleMatrixRequest;
 import graph.Graph;
@@ -15,61 +13,6 @@ import logic.Route;
 import logic.TravellingAlgorithm;
 
 public class Main {
-	public static void cargarArchivo(TravellingAlgorithm route){
-		ArrayList<String> lista= new ArrayList<String>();
-
-		System.out.println("escriba la ruta completa del archivo");
-		BufferedReader brsysi = new BufferedReader(new InputStreamReader(System.in));
-		String ruta="";
-		try {
-			ruta = brsysi.readLine();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		File archivo = null;
-		FileReader fr = null;
-		BufferedReader br = null;
-
-		try {
-			// Apertura del fichero y creacion de BufferedReader para poder
-			// hacer una lectura comoda (disponer del metodo readLine()).
-			archivo = new File (ruta);
-			fr = new FileReader (archivo);
-			br = new BufferedReader(fr);
-
-			// Lectura del fichero
-			String linea;
-			while((linea=br.readLine())!=null)
-				lista.add(linea);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			// En el finally cerramos el fichero, para asegurarnos
-			// que se cierra tanto si todo va bien como si salta 
-			// una excepcion.
-			try{                    
-				if( null != fr ){   
-					fr.close();     
-				}                  
-			}catch (Exception e2){ 
-				e2.printStackTrace();
-			}
-		}    
-
-		for (int i = 0; i < lista.size(); i++) {
-
-			String[] coordenadas=lista.get(i).split(",");
-
-			int longitud=Integer.parseInt(coordenadas[0]);
-
-			int latitud=Integer.parseInt(coordenadas[1]);
-
-			route.addAppointment(longitud, latitud, 0, "Example");
-		}
-		route.generateRoute(null);
-	}
 
 	public static void main(String[] args) {
 
@@ -82,7 +25,7 @@ public class Main {
 		} catch (IOException e1) {
 		}
 
-		//		testGoogleMaps(key);
+		//testGoogleMaps(key);
 		testInCaliColombia(key);
 
 	}
@@ -91,15 +34,18 @@ public class Main {
 
 		GoogleMatrixRequest google = new GoogleMatrixRequest();
 		try {
-			long t640am = GoogleMatrixRequest.getTodayTimeInSecondsAt(6, 50)+86400;
+			long t650am = GoogleMatrixRequest.getTodayTimeInSecondsAt(6, 50)+86400;
 			long t400am = GoogleMatrixRequest.getTodayTimeInSecondsAt(4, 0)+86400;
-			System.out.println("6:40 --> "+t640am);
+			System.out.println("6:50 --> "+t650am);
 			System.out.println("4:00 --> "+t400am);
 			double jplaza[] = new double[]{3.369213, -76.529486};
 			double icesi[] = new double[]{3.342090, -76.530847};
 
-			System.out.println(google.getTravelTime(jplaza, icesi, t640am, key));
-			System.out.println(google.getTravelTime(jplaza, icesi, t400am, key));
+			long tt650 = google.getTravelTime(jplaza, icesi, t650am, key);
+			long tt400 = google.getTravelTime(jplaza, icesi, t400am, key);
+
+			System.out.println("Travel time at 6:50am (rush hour) -> "+(tt650/60)+" minutes.");
+			System.out.println("Travel time at 4:00am (no traffic) -> "+(tt400/60)+" minutes.");
 		} catch (IOException e) {
 			System.out.println("Google error");
 		}
@@ -109,15 +55,17 @@ public class Main {
 
 		TravellingAlgorithm algorithm = new TravellingAlgorithm(true);
 
+		// The fist spot will be the starting point and the last spot will be the end of the route always
+
 		algorithm.addAppointment(3.385552, -76.538367, 30, "Alkosto");
 		algorithm.addAppointment(3.342090, -76.530847, 0, "Icesi");
-		algorithm.addAppointment(3.369213, -76.529486, 30, "JP");
+		algorithm.addAppointment(3.369213, -76.529486, 30, "Jardin");
 		algorithm.addAppointment(3.369573, -76.523412, 30, "La14");
 		algorithm.addAppointment(3.372966, -76.540071, 30, "Unicentro");
 		algorithm.addAppointment(3.353669, -76.523277, 30, "Autonoma");
 		algorithm.addAppointment(3.369338, -76.537082, 30, "Crepes");
 		algorithm.addAppointment(3.372298, -76.525489, 30, "Clinica");
-		
+
 //		algorithm.addAppointment(3.394126, -76.544926, 30, "Premier");
 //		algorithm.addAppointment(3.398072, -76.539722, 30, "Ruta66");
 //		algorithm.addAppointment(3.414001, -76.548025, 30, "Cosmocentro");
@@ -132,17 +80,20 @@ public class Main {
 		Graph graph = algorithm.initAndGetGraph();
 		double distances[][] = map.getAllDistancesForGraph(graph);
 		algorithm.generateRoute(distances);
-		
-//		algorithm.generateRoute(null);
 
 		// Printing options
 		algorithm.printRoutes();
 
-		// Getting the best route
+		// Getting the best route for tomorrow
+		Date date = new Date(System.currentTimeMillis()); // your date
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.YEAR, 2015);
-		calendar.set(Calendar.MONTH, 12);
-		calendar.set(Calendar.DAY_OF_MONTH, 3);
+		calendar.setTime(date);
+		calendar.getTimeInMillis();
+		calendar.add(Calendar.DAY_OF_MONTH, 1);
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		System.out.println("Tomorrow is "+day+"/"+(month+1)+"/"+year);
 
 		calendar.set(Calendar.HOUR_OF_DAY, 9);
 		long t1s = calendar.getTimeInMillis()/1000;
@@ -154,14 +105,16 @@ public class Main {
 		long t2e = calendar.getTimeInMillis()/1000;
 
 		long schedule[][] = {{t1s,t1e},{t2s,t2e}};
+		long visitTime = 15*60; // 15 minutes
 		System.out.println("-- Schedule --");
 		System.out.println(schedule[0][0]+" >> "+schedule[0][1]);
 		System.out.println(schedule[1][0]+" >> "+schedule[1][1]);
 
-		Route best = algorithm.getBestRouteBasedOnSchedule(schedule, map);
+		Route best = algorithm.getBestRouteBasedOnSchedule(schedule, map, visitTime);
 		if(best != null) {
 			System.out.println(">> The best route is:");
 			System.out.println(best.printWithObjectId());
+			System.out.println("Total of the route: "+best.getTimeInSchedule());
 		} else {
 			System.out.println("Best route hasn't been chosen.");
 		}

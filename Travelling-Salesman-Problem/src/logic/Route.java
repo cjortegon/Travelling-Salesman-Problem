@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import graph.Node;
 
-public class Route {
+public class Route implements Comparable<Route> {
 
 	private boolean contains[];
 	public ArrayList<Node> nodes;
 	public long schedule;
 	private double weight;
+	private long timeInSchedule;
 
 	public Route(int numberOfNodes, Node first) {
 		this.contains = new boolean[numberOfNodes];
@@ -54,11 +55,11 @@ public class Route {
 				routes.add(route);
 			}
 		}
-		
+
 		// Print new routes
-//		for (int i = 0; i < routes.size(); i++) {
-//			System.out.println(routes.get(i).printWithObjectId());
-//		}
+		//		for (int i = 0; i < routes.size(); i++) {
+		//			System.out.println(routes.get(i).printWithObjectId());
+		//		}
 
 		return routes;
 	}
@@ -93,7 +94,7 @@ public class Route {
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 
@@ -106,7 +107,7 @@ public class Route {
 
 		return "Route {"+route+"}";
 	}
-	
+
 	public void repeated() {
 		for (int i = 0; i < nodes.size(); i++) {
 			for (int j = i+1; j < nodes.size(); j++) {
@@ -116,5 +117,36 @@ public class Route {
 			}
 		}
 	}
+
+	public long findTimeToFinish(long[][] schedule, Maps google, long stopTime) {
+		timeInSchedule = 0;
+		int actualSchedule = 0;
+		long actualTime = schedule[actualSchedule][0];
+
+		for (int i = 1; i < nodes.size(); i++) {
+			long travelTime = (long) google.getTravelTime(nodes.get(i-1).latitude, nodes.get(i-1).longitude, nodes.get(i).latitude, nodes.get(i).longitude, actualTime);
+			if(schedule[actualSchedule][1] > actualTime+travelTime+stopTime) {
+				actualTime += travelTime+stopTime;
+				timeInSchedule += travelTime+stopTime;
+			} else if(actualSchedule < schedule.length) {
+				actualSchedule ++;
+				actualTime = schedule[actualSchedule][0]+travelTime+stopTime;
+				timeInSchedule += travelTime+stopTime;
+			} else {
+				timeInSchedule = Long.MAX_VALUE;
+				break;
+			}
+		}
+		return timeInSchedule;
+	}
 	
+	public long getTimeInSchedule() {
+		return timeInSchedule;
+	}
+
+	@Override
+	public int compareTo(Route o) {
+		return (int) (timeInSchedule - o.timeInSchedule);
+	}
+
 }

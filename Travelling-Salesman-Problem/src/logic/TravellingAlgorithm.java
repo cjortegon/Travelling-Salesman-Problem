@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import graph.Graph;
 import graph.Node;
@@ -98,13 +99,16 @@ public class TravellingAlgorithm {
 		filterRoutes(graph.nodes.size()*2, distances, averageDistance*3);
 	}
 
-	public Route getBestRouteBasedOnSchedule(long[][] schedule, Maps map) {
+	public Route getBestRouteBasedOnSchedule(long[][] schedule, Maps map, long stopTimeInSeconds) {
 
-		long dayStartTime = schedule[0][0];
+		for (Route route : routes) {
+			route.findTimeToFinish(schedule, map, stopTimeInSeconds);
+		}
 
-		// GASCA --> Prove all the routes at the specified schedule of working
+		// Sorting to obtain the smallest
+		Collections.sort(routes);
 
-		return null;
+		return routes.get(0);
 	}
 
 	// *************************** PUBLIC METHODS ***************************
