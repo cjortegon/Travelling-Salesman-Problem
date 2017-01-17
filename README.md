@@ -18,3 +18,10 @@ https://developers.google.com/maps/documentation/javascript/get-api-key
 
 Check the test case from test/Main.java where a test case is solved.
 For more information in how to use the code, go to this repository wiki.
+
+## How algorithm works
+
+- Using the distance with no traffic between the nodes, a connected graph is built.
+- To allow circuits around the graph the 'Divided groups' and 'Bow tie' problems are solved creating additional connections.
+- Then all the posible ways to travel around the graph are generated.
+- Finally routes are tested at the given starting time to discover how much time it takes to pass thru all.
