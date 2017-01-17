@@ -16,4 +16,5 @@ Our solution finds some of the best solutions without traffic and after it test 
 First you need to get a Google Maps Api Authentication Key:
 https://developers.google.com/maps/documentation/javascript/get-api-key
 
-Check the test case from test/Main.java where 
+Check the test case from test/Main.java where a test case is solved.
+For more information in how to use the code, go to this repository wiki.
